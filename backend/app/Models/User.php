@@ -42,4 +42,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    function certificates()
+    {
+        return $this->belongsToMany(Certification::class, 'user_certificate', 'user_id', 'certificate_id');
+    }
 }
