@@ -19,7 +19,7 @@ class adminController extends Controller
         $certification = new Certification;
         $certification->certificate_name = $req->certificate_name;
         $certification->save();
-        return response($certification, 201);
+        return response()->json($certification, 201);
     }
 
     function getCertifications () {
@@ -27,7 +27,7 @@ class adminController extends Controller
         foreach ($certifications as $certification) {
             $certification->user_count = $certification->users->count();
         }
-        return response($certifications, 200);
+        return response()->json($certifications, 200);
     }
 
     function deleteCertification (Request $req) {
@@ -39,7 +39,7 @@ class adminController extends Controller
             return response('Certificate not found', 404);
         }
         $certification->delete();
-        return response('Certificate deleted', 200);
+        return response()->json('Certificate deleted', 200);
     }
 
     function approveUser(Request $req){
@@ -49,11 +49,11 @@ class adminController extends Controller
         }
         $user->approve = true;
         $user->save();
-        return response($user, 200);
+        return response()->json($user, 200);
     }
 
     function getUsers () {
         $users = User::all();
-        return response($users, 200);
+        return response()->json($users, 200);
     }
 }

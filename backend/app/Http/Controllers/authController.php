@@ -24,7 +24,7 @@ class authController extends Controller
             'user' => $user,
             'token' => $token
         ];
-        return response($res, 201);
+        return response()->json($res, 201);
     }
 
     function register(Request $req)
@@ -55,6 +55,6 @@ class authController extends Controller
             'user' => $user,
             'token' => $token
         ];
-        return response($res, 201);
+        return response()->json($res, 201);
     }
 }
