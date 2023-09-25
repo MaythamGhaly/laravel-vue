@@ -33,13 +33,12 @@ class authController extends Controller
             'name' => 'required|string',
             'email' => 'required|string',
             'password' => 'required|string',
-            'role' => 'required|string',
             'sex' => 'required|string',
             'blood_type' => 'required|string',
         ]);
         $exist = User::where(['email' => $req->email])->first();
         if ($exist) {
-            return response('User already exists', 409);
+            return response()->json(['message' => 'User already exist'], 409);
         }
         $user = new User;
         $user->name = $req->name;

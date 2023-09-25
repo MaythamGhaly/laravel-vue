@@ -1,14 +1,7 @@
-<script setup>
-import Singup from './components/signup.vue'
-</script>
-
 <template>
-  <header>
-    <Singup />
-  </header>
-
+  <router-view/>
 </template>
 
-<style >
+<style>
 
 </style>

@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const name = ref('')
 const email = ref('')
@@ -8,16 +10,40 @@ const sex = ref('male')
 const blood_type = ref('A+')
 const terms = ref(false)
 const passwordError = ref('')
+const error = ref('')
 
-function signup() {
+async function signup() {
     passwordError.value = password.value.length > 8 ? '' : 'Password must be at least 8 characters'
     if (!passwordError.value) {
-        console.log(name.value)
-        console.log(email.value)
-        console.log(sex.value)
-        console.log(blood_type.value)
-        console.log(terms.value)
+        await fetch('http://127.0.0.1:8000/api/register', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: name.value,
+                email: email.value,
+                password: password.value,
+                sex: sex.value,
+                blood_type: blood_type.value,
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                if (data.token) {
+                    localStorage.setItem('token', data.token)
+                    router.push({ name: 'login' })
+                }
+                else {
+                    error.value = data.message
+                }
+            })
+            .catch((e) => {
+                error.value = 'Something went wrong'
+            });
     }
+
 }
 
 </script>
@@ -59,9 +85,13 @@ function signup() {
             <label for="terms">I agree to the terms of service</label>
         </div>
 
+        <div v-if="error" class="error">{{ error }}</div>
         <div class="submit">
             <button>Create an Account</button>
         </div>
+        <router-link :to="{ name: 'login' }" class="link">
+            <h5>Login</h5>
+        </router-link>
     </form>
 </template>
 
@@ -131,8 +161,15 @@ function signup() {
 .registration-form .submit {
     text-align: center;
 }
-.registration-form .error{
+
+.registration-form .error {
     color: red;
     font-size: 12px;
+}
+
+.link {
+    color: white;
+    text-decoration: none;
+    margin-top: 10px;
 }
 </style>
