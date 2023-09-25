@@ -45,7 +45,6 @@ async function signup() {
     }
 
 }
-
 </script>
 
 <template>

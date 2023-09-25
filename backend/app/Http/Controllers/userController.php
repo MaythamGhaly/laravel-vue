@@ -7,18 +7,18 @@ use Illuminate\Http\Request;
 
 class userController extends Controller
 {
-    function userCertifications(Request $req)
+    function addCertifications(Request $req)
     {
         $user_certificate = UserCertificate::where(['user_id' => auth()->user()->id, 'certificate_id' => $req->certificate_id])->first();
         if ($user_certificate) {
-            return response('User already has this certificate', 409);
+            return response()->json(['message' => 'User certificate already exists'], 400);
         }
         $UserCertificate = new UserCertificate();
         $UserCertificate->user_id = auth()->user()->id;
         $UserCertificate->certificate_id = $req->certificate_id;
         $UserCertificate->level = $req->level;
         $UserCertificate->save();
-        return response($UserCertificate, 200);
+        return response()->json(['message' => 'User certificate added'], 200);
     }
 
     function getUserCertifications()
@@ -34,10 +34,10 @@ class userController extends Controller
     {
         $user_certificate = UserCertificate::where(['user_id' => auth()->user()->id, 'certificate_id' => $req->certificate_id])->first();
         if (!$user_certificate) {
-            return response('User does not have this certificate', 404);
+            return response()->json(['message' => 'User certificate not found'], 400);
         }
         $user_certificate->delete();
-        return response('Certificate deleted', 200);
+        return response()->json(['message' => 'User certificate deleted'], 200);
     }
 
     function editProfile(Request $req){

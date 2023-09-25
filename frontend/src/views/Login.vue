@@ -21,10 +21,10 @@ async function   signin ()  {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data.token)
         if (data.token) {
-            localStorage.setItem('token', data.token)
-            router.push({ name: 'signup' })
+            localStorage.setItem('token', data.token )
+            localStorage.setItem('user', JSON.stringify(data.user) )
+            router.push({ name: 'home' })
         }
     })
     .catch((e) => {

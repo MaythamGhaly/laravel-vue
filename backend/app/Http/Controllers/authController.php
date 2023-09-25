@@ -16,7 +16,7 @@ class authController extends Controller
             return "Username or password is not matched";
         }
         if (!$user->approve) {
-            return response('User not approved', 401);
+            return response()->json('User not approved', 401);
         }
         $token = $user->createToken('apiToken')->plainTextToken;
         $user->last_login = now()->toDateString();

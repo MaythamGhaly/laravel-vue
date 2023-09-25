@@ -25,7 +25,7 @@ Route::post('/register', [authController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-certifications', [adminController::class, 'getCertifications']);
-    Route::post('/user-certifications', [userController::class, 'userCertifications']);
+    Route::post('/add-certifications', [userController::class, 'addCertifications']);
     Route::get('/get-user-certifications', [userController::class, 'getUserCertifications']);
     Route::post('/delete-user-certification', [userController::class, 'deleteUserCertification']);
     Route::post('/edit-profile', [userController::class, 'editProfile']);
