@@ -21,7 +21,11 @@ async function   signin ()  {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.token && data.user.approve == 1 && data.user.role == 'user') {
+        console.log(data)
+        if (data.message == 'User not approved'){
+            error.value = data.message
+        }
+        else if (data.token && data.user.role == 'user') {
             localStorage.setItem('token', data.token )
             localStorage.setItem('user', JSON.stringify(data.user) )
             router.push({ name: 'home' })
@@ -29,9 +33,6 @@ async function   signin ()  {
         else if (data.user.role == 'admin') {
             localStorage.setItem('token', data.token )
             router.push({ name: 'admin' })
-        }
-        else if (data.user.approve == 0) {
-            error.value = 'Your account is not approved yet'
         }
         else {
             error.value = data.message

@@ -1,6 +1,8 @@
 <script setup>
 
 import { ref } from 'vue'
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const user = JSON.parse(localStorage.getItem('user'))
 var certificates = ref([])
@@ -88,6 +90,12 @@ async function addCertificate() {
             console.log(e.message)
         });
 }
+
+function logout() {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    router.push({ name: 'login' })
+}
 </script>
 
 <template>
@@ -103,38 +111,51 @@ async function addCertificate() {
         <div class="line"></div>
         <h1>Your certificates</h1>
         <div class="certificates">
-            <div v-for="myCertificate in myCertifications" :key="myCertificate" class="certificate">{{
+            <div v-for="myCertificate in myCertifications" :key="myCertificate" class="certify">{{
                 myCertificate.certificate_name }} <span @click="deleteCertificate(myCertificate)">x</span> </div>
             <div v-if="myCertifications.length == 0">You don't have any certificate</div>
         </div>
         <h1>Add Certificate</h1>
         <select v-model="selectedOption" @change="addCertificate">
-            <option value="Select a certificate" disabled  >Select a certificate</option>
+            <option value="Select a certificate" disabled>Select a certificate</option>
             <option v-for="certificate in certificates" :key="certificate" :value="certificate">{{
                 certificate.certificate_name }}</option>
         </select>
         <div v-if="error" class="error">{{ error }}</div>
 
+        <div class="line"></div>
+        <button @click="logout">Logout</button>
     </div>
 </template>
 
 <style>
-
- .home span {
-     color: rgb(255, 255, 255);
- }
-
- .home h4 {
-     display: flex;
-     flex-direction: row;
-     justify-content: space-between;
-     min-width: 200px;
- }
- .home .certificate span {
-  color: rgb(255, 255, 255);
-  margin-left: 10px;
-  cursor: pointer;
+.home span {
+    color: rgb(255, 255, 255);
 }
- 
 
+.home h4 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: 200px;
+}
+
+.home .certificate span {
+    color: rgb(255, 255, 255);
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.certify {
+    display: flex;
+    gap: 10px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    background-color: rgb(83, 83, 83);
+}
+.certify span {
+    color: rgb(255, 255, 255);
+    margin-left: 10px;
+    cursor: pointer;
+}
 </style>

@@ -96,6 +96,61 @@ function deleteCertificate(certificate) {
             console.log(e)
         });
 }
+
+async function approve(user_id) {
+    fetch('http://127.0.0.1:8000/api/approve-user', {
+        method: 'POST',
+
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+            user_id: user_id,
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            if (data.message == 'User approved') {
+                users.value = users.value.filter(function (el) { return el.id != user_id; });
+                users.value.push(data.user)
+            }
+            else {
+                error.value = data.message
+            }
+        })
+        .catch((e) => {
+            console.log(e)
+        });
+}
+
+function deletUser(user_id) {
+    fetch('http://127.0.0.1:8000/api/delete-user', {
+        method: 'POST',
+
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+            user_id: user_id,
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+
+            if (data.message == 'User deleted') {
+                users.value = users.value.filter(function (el) { return el.id != user_id; });
+            }
+            else {
+                error.value = data.message
+            }
+        })
+        .catch((e) => {
+            console.log(e)
+        });
+}
 </script>
 
 <template>
@@ -120,6 +175,7 @@ function deleteCertificate(certificate) {
         <div class="line"></div>
         <h1>Users</h1>
         <div class="users">
+            <div v-if="users.length == 0">You don't have any user yet</div>
             <!-- <router-link :to="{ name: 'userInfo' }" class="link"> -->
             <div class="user" v-for="user in users" :key="user">
                 <h5>Name :{{ user.name }}</h5>
@@ -129,8 +185,8 @@ function deleteCertificate(certificate) {
                 <h5>Last Login :{{ user.last_login }}</h5>
                 <div v-if="user.approve == 1" class="approved"></div>
                 <div v-if="user.approve == 0" class="not-approved"></div>
-                <button v-if="user.approve == 0">approve</button>
-                <button >Delete</button>
+                <button v-if="user.approve == 0" @click="approve(user.id)">Approve</button>
+                <button @click="deletUser(user.id)" >Delete</button>
             </div>
         </div>
         <!-- </router-link> -->

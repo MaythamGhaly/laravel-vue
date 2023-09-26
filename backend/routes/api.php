@@ -35,7 +35,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/add-certifications', [adminController::class, 'addCertifications']);
         Route::post('/delete-certification', [adminController::class, 'deleteCertification']);
         Route::get('/get-users', [adminController::class, 'getUsers']);
+        Route::post('/delete-user', [adminController::class, 'deleteUser']);
     });
+    Route::post('/logout', [authController::class, 'logout']);
 });
 Route::middleware('auth:sanctum')->get('/authenticated-route', function () {
     // This route is protected by the auth:sanctum middleware

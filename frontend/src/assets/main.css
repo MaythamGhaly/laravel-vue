@@ -118,6 +118,7 @@ a,
 
   #app {
     padding: 0px;
-    width: 100%;
+    width: 95%;
+    margin: 0px;
   }
 }

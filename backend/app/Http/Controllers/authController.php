@@ -12,6 +12,9 @@ class authController extends Controller
     function login(Request $req)
     {
         $user = User::where(['email' => $req->email])->first();
+        if (!$user->approve) {
+            return response()->json(['message' => 'User not approved'], 401);
+        }
         if (!$user || !Hash::check($req->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
@@ -44,7 +47,7 @@ class authController extends Controller
         $user = new User;
         $user->name = $req->name;
         $user->email = $req->email;
-        $user->role = $req->role;
+        $user->role = 'user';
         $user->sex = $req->sex;
         $user->blood_type = $req->blood_type;
         $user->password = Hash::make($req->password);
@@ -56,5 +59,11 @@ class authController extends Controller
             'token' => $token
         ];
         return response()->json($res, 201);
+    }
+
+    function logout(Request $req)
+    {
+        $req->user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'Logged out'], 200);
     }
 }

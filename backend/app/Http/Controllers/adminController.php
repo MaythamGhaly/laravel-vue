@@ -51,17 +51,30 @@ class adminController extends Controller
     }
 
     function approveUser(Request $req){
-        $user = User::where(['email' => $req->email])->first();
+        $user = User::where(['id' => $req->user_id])->first();
         if (!$user) {
-            return response('User not found', 404);
+            return response()->json(['message' => 'User not found'], 404);
         }
         $user->approve = true;
         $user->save();
-        return response()->json($user, 200);
+        return response()->json(['message' => 'User approved','user' => $user], 200);
     }
 
     function getUsers () {
-        $users = User::orderBy('approve')->get();
+        $users = User::where('role','user')->orderBy('approve')->get();
         return response()->json($users, 200);
+    }
+
+    function deleteUser(Request $req){
+        $user = User::where(['id' => $req->user_id])->first();
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+        $user->delete();
+        $user_certifications = UserCertificate::where(['user_id' => $req->user_id])->get();
+        foreach ($user_certifications as $user_certification) {
+            $user_certification->delete();
+        }
+        return response()->json(['message' => 'User deleted'], 200);
     }
 }
