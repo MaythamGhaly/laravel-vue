@@ -16,7 +16,6 @@ class userController extends Controller
         $UserCertificate = new UserCertificate();
         $UserCertificate->user_id = auth()->user()->id;
         $UserCertificate->certificate_id = $req->certificate_id;
-        $UserCertificate->level = $req->level;
         $UserCertificate->save();
         return response()->json(['message' => 'User certificate added'], 200);
     }
@@ -42,11 +41,14 @@ class userController extends Controller
 
     function editProfile(Request $req){
         $user = auth()->user();
-        $user->name = $req->name;
-        $user->password = $req->password;
-        $user->blood_type = $req->blood_type;
-        $user->sex = $req->sex;
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+        $user->name = $req->name ? $req->name : $user->name;
+        $user->password = $req->password ? bcrypt($req->password) : $user->password;
+        $user->blood_type = $req->blood_type ? $req->blood_type : $user->blood_type;
+        $user->sex = $req->sex ? $req->sex : $user->sex;
         $user->save();
-        return response($user, 200);
+        return response()->json(['message' => 'Profile updated','user' => $user, 200]);
     }
 }

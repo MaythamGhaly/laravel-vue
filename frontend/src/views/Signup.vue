@@ -30,9 +30,7 @@ async function signup() {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 if (data.token) {
-                    localStorage.setItem('token', data.token)
                     router.push({ name: 'login' })
                 }
                 else {
@@ -48,7 +46,7 @@ async function signup() {
 </script>
 
 <template>
-    <form @submit.prevent="signup" class="registration-form">
+    <form @submit.prevent="signup" class="registration-form container">
         <h1>Registration</h1>
 
         <label>Name</label>
@@ -95,17 +93,6 @@ async function signup() {
 </template>
 
 <style>
-.registration-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid white;
-    border-radius: 10px;
-    padding: 20px 80px;
-    background-color: rgb(65, 65, 65);
-    margin-bottom: 15px;
-}
 
 .registration-form label {
     color: white;

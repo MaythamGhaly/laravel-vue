@@ -13,13 +13,14 @@ class authController extends Controller
     {
         $user = User::where(['email' => $req->email])->first();
         if (!$user || !Hash::check($req->password, $user->password)) {
-            return "Username or password is not matched";
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
         if (!$user->approve) {
-            return response()->json('User not approved', 401);
+            return response()->json(['message' => 'User not approved'], 401);
         }
         $token = $user->createToken('apiToken')->plainTextToken;
-        $user->last_login = now()->toDateString();
+        $user->last_login = Carbon::now();
+        $user->save();
         $res = [
             'user' => $user,
             'token' => $token
